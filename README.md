@@ -1,20 +1,37 @@
-# Automated Firewall Access Control List (ACL) Updater
+# Firewall Allow-List Remediation Script (Python)
 
 ## 📌 Project Description
-This project automates the remediation of insider threats by dynamically updating local network firewall access lists. Using Python, the script ingests a list of active perimeter-allowed IP addresses and reconciles them against a JSON-formatted threat intelligence feed containing compromised internal assets. The core purpose is to parse, sanitize, and overwrite configuration lists securely without manual human intervention.
+A Python script that automates a common access-control task: removing IP addresses that should no longer have access from a firewall allow list. The script reads the current allow list (`allow_list.txt`), loads a list of compromised IP addresses from a JSON file (`remove_list.json`), removes any matches, and writes the updated list back to disk.
 
-## ⚙️ Architecture & Algorithm Overview
-The automation tool executes a four-stage pipeline:
-1. **Data Ingestion & Parsing:** Opens the `allow_list.txt` configuration using Python's `with open()` context manager in read-only mode (`r`) to ensure safe memory allocation.
-2. **Tokenization:** Converts the raw configuration string into an iterable Python list utilizing the `.split()` method.
-3. **Reconciliation Loop:** Iterates securely through the threat feed data. A conditional `if` statement checks for memberships, executing the `.remove()` method on target vectors. 
-4. **State Persistence:** Joins the updated array back into a structured, line-delimited string via `"\n".join()` and flushes it back to the disk using write mode (`w`).
+Built as hands-on practice after completing Google's *Automate Cybersecurity Tasks with Python* course.
 
-## 🚀 How to Run & Live Simulation
-[Aquí pondrás las instrucciones de cómo clonar tu repositorio y ejecutar tu script en VS Code]
+## ⚙️ How It Works
+1. **Read the allow list:** opens `allow_list.txt` in read mode, strips whitespace and skips blank lines and `#` comments.
+2. **Load the removal list:** parses `remove_list.json` and reads the `compromised_ips` array.
+3. **Remove matches:** loops through the compromised IPs and removes each one that appears in the allow list.
+4. **Save the result:** joins the remaining IPs with `"\n".join()` and overwrites `allow_list.txt` in write mode.
+5. **Print the result:** shows the updated allow list in the console.
+
+## 🚀 How to Run
+Requires Python 3 (only the standard library is used).
+
+```bash
+git clone https://github.com/CodeWithLuis1/Automated-Firewall-Access-Control-List-ACL-Remediation-Tool.git
+cd Automated-Firewall-Access-Control-List-ACL-Remediation-Tool
+python acl_updater.py
+```
+
+> **Note:** the script overwrites `allow_list.txt` and does not keep comment lines. Keep a copy of the original file if you want to run it more than once.
+
+## 📁 Files
+| File | Purpose |
+|---|---|
+| `acl_updater.py` | Main script |
+| `allow_list.txt` | Sample allow list of IP addresses |
+| `remove_list.json` | Sample list of compromised IPs to remove |
 
 ## 🛠️ Skills Demonstrated
-* Cyber Engineering & Scripting (Python)
-* Secure File I/O Management
-* Threat Intelligence Feed Integration (JSON parsing)
-* Data Sanitization and Tokenization
+* Python scripting for security automation
+* File reading and writing with context managers
+* JSON parsing
+* Access-control list maintenance (least privilege)
